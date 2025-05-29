@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: "selector",
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
@@ -8,8 +9,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                'montserrat': ['Montserrat', 'sans-serif'],
-            }
+                montserrat: ["Montserrat", "sans-serif"],
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],
