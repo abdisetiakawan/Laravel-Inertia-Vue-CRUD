@@ -11,6 +11,9 @@ import NavLink from "../Components/NavLink.vue";
             <NavLink routeName="home" componentName="Home">Home</NavLink>
 
             <div class="flex gap-2">
+                <NavLink routeName="login" componentName="Auth/Login"
+                    >Login</NavLink
+                >
                 <NavLink routeName="register" componentName="Auth/Register"
                     >Register</NavLink
                 >
