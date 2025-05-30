@@ -4,11 +4,29 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
-        return inertia(component: 'Auth/Register');
+        return Inertia::render('Auth/Register');
+    }
+
+    public function registerUser(Request $request)
+    {
+        $credentials = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|lowercase|email|max:255',
+            'password' => 'required|confirmed|min:3'
+        ]);
+
+        $user = User::create(attributes: $credentials);
+
+        Auth::login(user: $user);
+
+        return redirect()->route(route: 'home');
     }
 }
