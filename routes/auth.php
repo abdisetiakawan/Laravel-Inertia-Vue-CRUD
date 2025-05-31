@@ -18,3 +18,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthenticateController::class, 'loginUser'])
         ->name('login.post');
 });
+
+Route::middleware('auth')->group(function () {
+    // Logout
+    Route::post('/logout', [AuthenticateController::class, 'logoutUser'])
+        ->name('logout');
+});
