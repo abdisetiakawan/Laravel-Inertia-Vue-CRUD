@@ -41,6 +41,12 @@ const show = ref(false);
                         class="absolute z-50 top-12 right-0 bg-slate-700 text-white rounded-lg overflow-hidden w-40"
                     >
                         <Link
+                            :href="route('profile.edit')"
+                            class="block w-full px-6 py-3 hover:bg-slate-800 text-left"
+                            >Profile</Link
+                        >
+                        <Link
+                            :href="route('dashboard')"
                             class="block w-full px-6 py-3 hover:bg-slate-800 text-left"
                             >Dashboard</Link
                         >
@@ -63,7 +69,7 @@ const show = ref(false);
                     >
                 </div>
                 <button
-                    class="ml-2 p-2 text-white bg-slate-700 hover:bg-slate-600 rounded-full"
+                    class="ml-2 text-white bg-slate-700 hover:bg-slate-600 rounded-lg px-2"
                     @click="switchTheme"
                 >
                     <i class="fa-solid fa-moon"></i>
