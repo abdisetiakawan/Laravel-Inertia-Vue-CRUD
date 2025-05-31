@@ -11,7 +11,9 @@ class AuthenticateController extends Controller
 {
     public function showLoginForm()
     {
-        return Inertia::render(component: 'Auth/Login');
+        return Inertia::render(component: 'Auth/Login', props: [
+            'status' => session('status'),
+        ]);
     }
 
     public function loginUser(Request $request)
