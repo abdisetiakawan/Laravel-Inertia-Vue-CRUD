@@ -9,8 +9,7 @@ defineProps({
 
 <template>
     <div class="mb-4" v-if="Object.keys(errors).length">
-        <p class="text-sm text-red-500">Something went wrong!</p>
-        <ul class="list-disc ml-4 list-inside">
+        <ul class="list-disc pl-5">
             <li
                 v-for="(error, index) in errors"
                 :key="index"
