@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Hash;
 
@@ -49,5 +50,19 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->route('profile.edit')->with('password_status', 'Password updated successfully.');
+    }
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'string', 'current_password'],
+        ]);
+        $user = $request->user();
+        Auth::logout();
+
+        $user->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 }
