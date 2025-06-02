@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +12,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::inertia('/', 'Home')->middleware('verified')->name('home');
+Route::get('/', [ListingController::class, 'index'])->middleware('verified')->name('home');
+
+Route::resource('listings', ListingController::class)->except(['index']);
 
 require __DIR__ . '/auth.php';
