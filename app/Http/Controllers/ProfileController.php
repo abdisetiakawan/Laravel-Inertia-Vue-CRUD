@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -11,7 +12,8 @@ class ProfileController extends Controller
     {
         return Inertia::render('Profile/Edit', [
             'user' => $request->user(),
-            'status' => session('status'),
+            'info_status' => session('info_status'),
+            'password_status' => session('password_status'),
         ]);
     }
     public function update(Request $request)
@@ -29,6 +31,23 @@ class ProfileController extends Controller
         }
         $user->save();
 
-        return redirect()->route('profile.edit');
+        return redirect()->route('profile.edit')->with('info_status', 'Profile information updated successfully.');;
+    }
+    public function updatePassword(Request $request)
+    {
+        $fields = $request->validate([
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if (!Hash::check($request->current_password, $request->user()->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        }
+
+        $request->user()->update([
+            'password' => Hash::make($fields['password']),
+        ]);
+
+        return redirect()->route('profile.edit')->with('password_status', 'Password updated successfully.');
     }
 }

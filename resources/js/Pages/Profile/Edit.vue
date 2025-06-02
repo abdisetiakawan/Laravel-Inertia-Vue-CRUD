@@ -1,8 +1,13 @@
 <script setup>
 import UpdateInfo from "./Sections/UpdateInfo.vue";
+import UpdatePassword from "./Sections/UpdatePassword.vue";
 defineProps({
     user: Object,
-    status: {
+    info_status: {
+        type: String,
+        default: null,
+    },
+    password_status: {
         type: String,
         default: null,
     },
@@ -11,5 +16,6 @@ defineProps({
 
 <template>
     <Head title="- Profile" />
-    <UpdateInfo :user="user" :status="status" />
+    <UpdateInfo :user="user" :status="info_status" />
+    <UpdatePassword :status="password_status" />
 </template>
