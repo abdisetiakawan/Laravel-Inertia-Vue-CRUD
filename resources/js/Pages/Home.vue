@@ -11,6 +11,8 @@ const props = defineProps({
     searchTerm: String,
 });
 
+const username = params.user_id ? props.listings.data[0]?.user?.name : null;
+
 const form = useForm({
     search: props.searchTerm,
 });
@@ -28,7 +30,29 @@ const search = () => {
     <Head title="- Latest Listings" />
 
     <div class="flex items-center justify-between mb-4">
-        <div>filters</div>
+        <div class="flex items-center gap-3">
+            <Link
+                class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+                v-if="params.tags"
+                :href="route('home', { ...params, tags: null, page: null })"
+                >{{ params.tags }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+            <Link
+                class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+                v-if="params.search"
+                :href="route('home', { ...params, search: null, page: null })"
+                >{{ params.search }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+            <Link
+                class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+                v-if="params.user_id"
+                :href="route('home', { ...params, user_id: null, page: null })"
+                >{{ username }}
+                <i class="fa-solid fa-xmark"></i>
+            </Link>
+        </div>
 
         <div class="w-1/4">
             <form @submit.prevent="search">
