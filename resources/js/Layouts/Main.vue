@@ -3,6 +3,7 @@ import { switchTheme } from "../theme";
 import NavLink from "../Components/NavLink.vue";
 import { usePage } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
+import { Link } from "@inertiajs/vue3";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -40,6 +41,11 @@ const show = ref(false);
                         @click="show = false"
                         class="absolute z-50 top-12 right-0 bg-slate-700 text-white rounded-lg overflow-hidden w-40"
                     >
+                        <Link
+                            :href="route('listings.create')"
+                            class="block w-full px-6 py-3 hover:bg-slate-800 text-left"
+                            >New Listing</Link
+                        >
                         <Link
                             :href="route('profile.edit')"
                             class="block w-full px-6 py-3 hover:bg-slate-800 text-left"

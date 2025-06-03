@@ -7,6 +7,7 @@ use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ListingController extends Controller
@@ -36,15 +37,35 @@ class ListingController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Listings/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreListingRequest $request)
+    public function store(Request $request)
     {
-        //
+        $fields = $request->validate([
+            'title' => 'required|string|max:255',
+            'desc' => 'required|string',
+            'email' => 'nullable|email',
+            'tags' => 'nullable|string',
+            'link' => 'nullable|url',
+            'image' => 'nullable|image|max:3072', // 3MB max
+        ]);
+
+        if ($request->hasFile('image')) {
+            $fields['image'] = Storage::disk('public')->putFileAs(
+                'images/listings',
+                $request->file('image'),
+                time() . '-' . $request->file('image')->getClientOriginalName()
+            );
+        }
+
+        $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
+
+        $request->user()->listings()->create($fields);
+        return redirect()->route('dashboard')->with('status', 'Listing created successfully!');
     }
 
     /**
