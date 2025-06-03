@@ -37,7 +37,7 @@ class ListingController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Listings/Create');
+        return Inertia::render('Listings/Create', ['status' => session('status')]);
     }
 
     /**
@@ -65,7 +65,7 @@ class ListingController extends Controller
         $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
 
         $request->user()->listings()->create($fields);
-        return redirect()->route('dashboard')->with('status', 'Listing created successfully!');
+        return redirect()->route('listings.create')->with('status', 'Listing created successfully!');
     }
 
     /**
@@ -73,7 +73,10 @@ class ListingController extends Controller
      */
     public function show(Listing $listing)
     {
-        //
+        return Inertia::render('Listings/Show', [
+            'listing' => $listing,
+            'user' => $listing->user->only(['id', 'name']),
+        ]);
     }
 
     /**
@@ -81,7 +84,7 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        //
+        return Inertia::render('Listings/Edit');
     }
 
     /**
