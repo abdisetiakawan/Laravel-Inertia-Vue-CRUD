@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::get('/', [ListingController::class, 'index'])->middleware('verified')->name('home');
+Route::get('/', [ListingController::class, 'index'])->name('home');
 
 Route::resource('listings', ListingController::class)->except(['index']);
 

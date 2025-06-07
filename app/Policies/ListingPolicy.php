@@ -19,9 +19,9 @@ class ListingPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Listing $listing): bool
+    public function view(?User $user, Listing $listing): bool
     {
-        //
+        return $listing->user->role !== 'suspended' && $listing->is_approved;
     }
 
     /**
@@ -29,7 +29,7 @@ class ListingPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->role !== 'suspended';
     }
 
     /**
@@ -37,7 +37,7 @@ class ListingPolicy
      */
     public function update(User $user, Listing $listing): bool
     {
-        //
+        return $user->id === $listing->user_id && $user->role !== 'suspended';
     }
 
     /**

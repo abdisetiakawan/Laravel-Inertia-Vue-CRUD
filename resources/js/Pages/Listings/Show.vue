@@ -6,6 +6,7 @@ const props = defineProps({
     listing: Object,
     user: Object,
     status: String,
+    canUpdate: Boolean,
 });
 
 const deleteListing = () => {
@@ -41,7 +42,7 @@ const deleteListing = () => {
                     <p class="text-slate-400 w-full border-b">Listing detail</p>
 
                     <!-- Edit and delete buttons -->
-                    <div class="pl-4 flex items-center gap-4">
+                    <div class="pl-4 flex items-center gap-4" v-if="canUpdate">
                         <Link
                             class="bg-green-500 text-white rounded-md px-6 py-2 hover:outline outline-green-500 outline-offset-2"
                             :href="route('listings.edit', listing.id)"
