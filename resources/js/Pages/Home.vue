@@ -1,6 +1,7 @@
 <script setup>
 import Card from "../Components/Card.vue";
 import PaginationLinks from "../Components/PaginationLinks.vue";
+import SessionMessages from "../Components/SessionMessages.vue";
 import InputField from "../Components/InputField.vue";
 import { router, useForm } from "@inertiajs/vue3";
 
@@ -9,6 +10,7 @@ const params = route().params;
 const props = defineProps({
     listings: Object,
     searchTerm: String,
+    status: String,
 });
 
 const username = params.user_id ? props.listings.data[0]?.user?.name : null;
@@ -30,6 +32,8 @@ const search = () => {
     <Head title="- Latest Listings" />
 
     <div class="flex items-center justify-between mb-4">
+        <SessionMessages :status="props.status" />
+
         <div class="flex items-center gap-3">
             <Link
                 class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600"

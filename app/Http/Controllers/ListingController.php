@@ -28,7 +28,8 @@ class ListingController extends Controller
             ->withQueryString();
         return Inertia::render('Home', [
             'listings' => $listings,
-            'searchTerm' => $request->search
+            'searchTerm' => $request->search,
+            'status' => session('status'),
         ]);
     }
 
@@ -76,6 +77,7 @@ class ListingController extends Controller
         return Inertia::render('Listings/Show', [
             'listing' => $listing,
             'user' => $listing->user->only(['id', 'name']),
+            'status' => session('status')
         ]);
     }
 
@@ -84,15 +86,42 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        return Inertia::render('Listings/Edit');
+        return Inertia::render('Listings/Edit', [
+            'listing' => $listing,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateListingRequest $request, Listing $listing)
+    public function update(Request $request, Listing $listing)
     {
-        //
+        $fields = $request->validate([
+            'title' => 'required|string|max:255',
+            'desc' => 'required|string',
+            'email' => 'nullable|email',
+            'tags' => 'nullable|string',
+            'link' => 'nullable|url',
+            'image' => 'nullable|image|max:3072', // 3MB max
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($listing->image) {
+                Storage::disk('public')->delete($listing->image);
+            }
+            $fields['image'] = Storage::disk('public')->putFileAs(
+                'images/listings',
+                $request->file('image'),
+                time() . '-' . $request->file('image')->getClientOriginalName()
+            );
+        } else {
+            $fields['image'] = $listing->image;
+        }
+
+        $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
+
+        $listing->update($fields);
+        return redirect()->route('listings.show', $listing->id)->with('status', 'Listing updated successfully!');;
     }
 
     /**
@@ -100,6 +129,10 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing)
     {
-        //
+        if ($listing->image) {
+            Storage::disk('public')->delete($listing->image);
+        }
+        $listing->delete();
+        return redirect()->route('home')->with('status', 'Listing deleted successfully!');
     }
 }

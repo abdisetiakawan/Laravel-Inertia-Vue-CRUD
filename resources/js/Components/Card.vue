@@ -26,7 +26,7 @@ const selectTag = (tag) => {
     >
         <div>
             <!-- Image -->
-            <Link href="">
+            <Link :href="route('listings.show', listing.id)">
                 <img
                     :src="
                         listing.image
