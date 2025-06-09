@@ -83,7 +83,7 @@ class ListingController extends Controller implements HasMiddleware
         $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
 
         $request->user()->listings()->create($fields);
-        return redirect()->route('listings.create')->with('status', 'Listing created successfully!');
+        return redirect()->route('dashboard')->with('status', 'Listing created successfully!');
     }
 
     /**
@@ -145,7 +145,7 @@ class ListingController extends Controller implements HasMiddleware
         $fields['tags'] = implode(',', array_unique(array_filter(array_map('trim', explode(',',  $request->tags)))));
 
         $listing->update($fields);
-        return redirect()->route('listings.show', $listing->id)->with('status', 'Listing updated successfully!');;
+        return redirect()->route('dashboard', $listing->id)->with('status', 'Listing updated successfully!');;
     }
 
     /**
@@ -158,6 +158,6 @@ class ListingController extends Controller implements HasMiddleware
             Storage::disk('public')->delete($listing->image);
         }
         $listing->delete();
-        return redirect()->route('home')->with('status', 'Listing deleted successfully!');
+        return redirect()->route('dashboard')->with('status', 'Listing deleted successfully!');
     }
 }
