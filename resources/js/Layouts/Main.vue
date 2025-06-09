@@ -2,12 +2,25 @@
 import { switchTheme } from "../theme";
 import NavLink from "../Components/NavLink.vue";
 import { usePage } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { Link } from "@inertiajs/vue3";
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 const show = ref(false);
+const isDark = ref(false);
+
+onMounted(() => {
+    isDark.value =
+        localStorage.theme === "dark" ||
+        (!localStorage.theme &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+});
+
+const toggleTheme = () => {
+    switchTheme();
+    isDark.value = !isDark.value;
+};
 </script>
 
 <template>
@@ -75,10 +88,21 @@ const show = ref(false);
                     >
                 </div>
                 <button
-                    class="ml-2 text-white bg-slate-700 hover:bg-slate-600 rounded-lg px-2"
-                    @click="switchTheme"
+                    class="ml-2 relative inline-flex items-center h-8 w-14 rounded-full bg-slate-700 transition-colors focus:outline-none"
+                    :class="{ 'bg-slate-600': isDark }"
+                    @click="toggleTheme"
                 >
-                    <i class="fa-solid fa-moon"></i>
+                    <span
+                        class="inline-block h-6 w-6 transform rounded-full bg-white transition-transform"
+                        :class="isDark ? 'translate-x-7' : 'translate-x-1'"
+                    >
+                        <i
+                            class="text-slate-800 text-sm flex items-center justify-center h-full"
+                            :class="
+                                isDark ? 'fa-solid fa-moon' : 'fa-solid fa-sun'
+                            "
+                        ></i>
+                    </span>
                 </button>
             </div>
         </nav>
