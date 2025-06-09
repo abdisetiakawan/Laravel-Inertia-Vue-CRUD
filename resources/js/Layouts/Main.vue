@@ -34,7 +34,7 @@ const toggleTheme = () => {
 
             <div class="flex gap-2">
                 <!-- Auth links -->
-                <div v-if="user" class="relative">
+                <div v-if="user" class="relative flex items-center gap-2">
                     <div
                         @click="show = !show"
                         class="flex gap-2 items-center px-3 py-1 rounded-lg cursor-pointer hover:bg-slate-700 transition-colors"
@@ -47,6 +47,13 @@ const toggleTheme = () => {
                             :class="{ 'rotate-90': show }"
                         ></i>
                     </div>
+                    <Link
+                        v-if="user.role === 'admin'"
+                        :href="route('admin.index')"
+                        class="hover:bg-slate-700 w-6 h-6 grid place-items-center rounded-full hover:outline outline-1 outline-white"
+                    >
+                        <i class="fa-solid fa-lock"></i>
+                    </Link>
 
                     <!-- Dropdown -->
                     <div
