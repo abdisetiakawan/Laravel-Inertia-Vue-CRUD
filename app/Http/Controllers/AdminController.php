@@ -13,6 +13,18 @@ class AdminController extends Controller
         $user = User::with('listings')->paginate(10);
         return Inertia::render('Admin/AdminDashboard', [
             'users' => $user,
+            'status' => session('status'),
         ]);
+    }
+
+    public function role(Request $request, User $user)
+    {
+        $request->validate(['role' => 'string|required']);
+
+        $user->update(['role' => $request->role]);
+
+        return redirect()
+            ->route('admin.index')
+            ->with('status', "User role changed to {$request->role} successfully.");
     }
 }

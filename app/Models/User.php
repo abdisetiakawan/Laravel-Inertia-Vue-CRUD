@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'role', // Assuming you have a 'role' column to manage user roles
     ];
 
     /**
