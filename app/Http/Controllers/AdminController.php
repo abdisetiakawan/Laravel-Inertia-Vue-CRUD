@@ -20,6 +20,15 @@ class AdminController extends Controller
         ]);
     }
 
+    public function show(User $user)
+    {
+        $user_listings = $user->listings()->paginate(10); // Tambahkan paginate() untuk mengeksekusi query
+        return Inertia::render('Admin/UserPage', [
+            'user' => $user,
+            'listings' => $user_listings,
+        ]);
+    }
+
     public function role(Request $request, User $user)
     {
         $request->validate(['role' => 'string|required']);
