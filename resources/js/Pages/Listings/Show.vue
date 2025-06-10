@@ -17,6 +17,15 @@ const deleteListing = () => {
         });
     }
 };
+
+const toggleApprove = () => {
+    let msg = props.listing.is_approved
+        ? "Are you sure you want to disapprove this listing?"
+        : "Are you sure you want to approve this listing?";
+    if (confirm(msg)) {
+        router.put(route("admin.approve", props.listing.id));
+    }
+};
 </script>
 
 <template>
@@ -30,7 +39,10 @@ const deleteListing = () => {
             This listing is
             {{ listing.is_approved ? "Approved" : "Disapproved" }}.
         </p>
-        <button class="bg-slate-600 px-3 py-1 rounded-md">
+        <button
+            @click.prevent="toggleApprove"
+            class="bg-slate-600 px-3 py-1 rounded-md"
+        >
             {{ listing.is_approved ? "Disapprove it" : "Approve it" }}
         </button>
     </div>

@@ -1,21 +1,111 @@
 <script setup>
+import { router, useForm } from "@inertiajs/vue3";
 import Title from "../../Components/Title.vue";
+import InputField from "../../Components/InputField.vue";
+import PaginationLinks from "../../Components/PaginationLinks.vue";
+import SessionMessages from "../../Components/SessionMessages.vue";
 
 const props = defineProps({
     user: Object,
     listings: Object,
+    status: String,
 });
+
+const params = route().params;
+const form = useForm({
+    search: params.search,
+});
+
+const search = () => {
+    router.get(
+        route("user.show", {
+            user: props.user.id,
+            search: form.search,
+        })
+    );
+};
+
+const showDisapproved = (e) => {
+    if (e.target.checked) {
+        router.get(
+            route("user.show", {
+                user: props.user.id,
+                search: form.search,
+                disapproved: true,
+            })
+        );
+    } else {
+        router.get(
+            route("user.show", {
+                user: props.user.id,
+                search: form.search,
+                disapproved: null,
+            })
+        );
+    }
+};
+
+const toggleApprove = (listing) => {
+    let msg = listing.is_approved
+        ? "Are you sure you want to disapprove this listing?"
+        : "Are you sure you want to approve this listing?";
+    if (confirm(msg)) {
+        router.put(route("admin.approve", listing.id));
+    }
+};
 </script>
 
 <template>
     <Head :title="`- ${user.name} Listings`" />
-
+    <!-- Session Messages -->
+    <SessionMessages :status="status" />
     <!-- Heading -->
     <div class="mb-6">
         <Title>{{ user.name }} latest listings</Title>
         <div class="flex items-end justify-between">
-            <div>search</div>
-            <div>toggle</div>
+            <div class="flex items-center gap-2">
+                <!-- Search -->
+                <form @submit.prevent="search">
+                    <InputField
+                        label=""
+                        icon="magnifying-glass"
+                        placeholder="Search..."
+                        v-model="form.search"
+                    />
+                </form>
+                <Link
+                    class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+                    v-if="params.search"
+                    :href="
+                        route('user.show', {
+                            ...params,
+                            search: null,
+                            page: null,
+                            user: user.id,
+                        })
+                    "
+                    >{{ params.search }}
+                    <i class="fa-solid fa-xmark"></i>
+                </Link>
+            </div>
+            <!-- Toggle role button -->
+            <div
+                class="flex items-center gap-1 text-xs hover:bg-slate-300 dark:hover:bg-slate-800 px-2 py-1 rounded-md"
+            >
+                <input
+                    @input="showDisapproved"
+                    :checked="params.disapproved"
+                    type="checkbox"
+                    id="disapproved-toggle"
+                    class="cursor-pointer rounded-md border-1 outline-1 text-indigo-500 ring-indigo-500 border-slate-700"
+                />
+                <label
+                    for="disapproved-toggle"
+                    class="cursor-pointer block text-sm font-medium text-slate-700 dark:text-slate-300"
+                >
+                    Show disapproved listings
+                </label>
+            </div>
         </div>
     </div>
 
@@ -36,7 +126,7 @@ const props = defineProps({
                 <td class="py-5 px-3">{{ listing.title }}</td>
 
                 <td class="py-5 px-3 text-2xl text-center">
-                    <button>
+                    <button @click.prevent="toggleApprove(listing)">
                         <i
                             :class="`fa-solid fa-${
                                 listing.is_approved
@@ -56,4 +146,8 @@ const props = defineProps({
             </tr>
         </tbody>
     </table>
+
+    <div class="mt-6">
+        <PaginationLinks :paginator="listings" />
+    </div>
 </template>
